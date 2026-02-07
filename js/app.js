@@ -1,26 +1,8 @@
 // IMPORTANT: Replace with your new deployment URL
 const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxqQgYtQBJY3mcuXr6QpuOnLAVWTXTrHaeGqnQlR48yWAK1nnlEJ6Imwy7wf8rudmKW6Q/exec";
 
-// Import Google Analytics Measurement ID
-import { GA_MEASUREMENT_ID } from './config.js';
-
-// Initialize Google Analytics
-function initializeGoogleAnalytics() {
-    if (GA_MEASUREMENT_ID && GA_MEASUREMENT_ID !== 'G-XXXXXXXXXX') {
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        window.gtag = gtag;
-        gtag('js', new Date());
-        gtag('config', GA_MEASUREMENT_ID, {
-            'anonymize_ip': true,
-            'allow_google_signals': false
-        });
-    }
-}
-
 document.addEventListener('alpine:init', () => {
     Alpine.store('app', { pageTitle: 'Academic AI Prompts' });
-    initializeGoogleAnalytics();
 });
 
 function promptApp() {
