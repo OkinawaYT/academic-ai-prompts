@@ -40,6 +40,8 @@ function promptApp() {
         selectedTags: [],
         sortByLikes: false,
         showToast: false,
+        showPromptModal: false,
+        selectedPrompt: null,
         userLikes: [],
         charts: { left: null, right: null },
         charts: {},
@@ -90,7 +92,16 @@ function promptApp() {
                 this.isDark = true;
                 document.documentElement.classList.add('dark');
             }
-            this.lang = localStorage.getItem('app_lang') || 'jp';
+
+            // Auto-detect browser language if not set
+            if (!localStorage.getItem('app_lang')) {
+                const browserLang = navigator.language || navigator.languages[0];
+                // Set to 'en' if browser language is English, otherwise 'jp'
+                this.lang = browserLang.toLowerCase().startsWith('en') ? 'en' : 'jp';
+            } else {
+                this.lang = localStorage.getItem('app_lang');
+            }
+
             this.currentRole = localStorage.getItem('app_role') || 'faculty';
             this.userLikes = JSON.parse(localStorage.getItem('user_likes') || '[]');
 
@@ -342,6 +353,18 @@ function promptApp() {
             const k = item.category_en || item.category;
             const def = this.categories[k];
             return def ? (this.lang === 'jp' ? def.jp : def.en) : k;
+        },
+
+        openPromptModal(item) {
+            this.selectedPrompt = item;
+            this.showPromptModal = true;
+            document.body.style.overflow = 'hidden';
+        },
+
+        closePromptModal() {
+            this.showPromptModal = false;
+            this.selectedPrompt = null;
+            document.body.style.overflow = '';
         },
 
         updateCharts() {
