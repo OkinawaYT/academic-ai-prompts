@@ -1,0 +1,10 @@
+*.gs
+*.sample.gs
+.DS_Store
+clearCache_snippet.js
+README.md
+README_JP.md
+*.zip
+data_csv/
+archive/
+js/config.js
