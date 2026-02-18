@@ -40,6 +40,7 @@ function promptApp() {
         selectedTags: [],
         sortByLikes: false,
         showToast: false,
+        showDownloadMenu: false,
         showPromptModal: false,
         selectedPrompt: null,
         userLikes: [],
@@ -68,7 +69,10 @@ function promptApp() {
                 tagLabel: 'タグ',
                 categoryLabel: 'カテゴリー',
                 totalLabel: 'いいね',
-                tabLabel: 'いいね'
+                tabLabel: 'いいね',
+                downloadLabel: 'プロンプトをダウンロード',
+                downloadFaculty: '教職員向けデータ',
+                downloadStudent: '学生向けデータ'
             },
             en: {
                 totalEngagement: 'Total Engagement',
@@ -82,7 +86,10 @@ function promptApp() {
                 noData: 'No data found',
                 categoryLabel: 'Category',
                 totalLabel: 'Likes',
-                tabLabel: 'Likes'
+                tabLabel: 'Likes',
+                downloadLabel: 'Download prompts',
+                downloadFaculty: 'Faculty data',
+                downloadStudent: 'Student data'
             }
         },
 
@@ -338,6 +345,31 @@ function promptApp() {
         shareSite() {
             if (navigator.share) navigator.share({ title: 'Academic AI Prompts', url: window.location.href });
             else { navigator.clipboard.writeText(window.location.href); this.showToast = true; }
+        },
+
+        downloadPromptData(type) {
+            const map = {
+                faculty: {
+                    url: 'https://raw.githubusercontent.com/OkinawaYT/academic-ai-prompts/refs/heads/main/data/faculty_prompts.json',
+                    filename: 'faculty_prompts.json'
+                },
+                student: {
+                    url: 'https://raw.githubusercontent.com/OkinawaYT/academic-ai-prompts/refs/heads/main/data/student_prompts.json',
+                    filename: 'student_prompts.json'
+                }
+            };
+
+            const target = map[type];
+            if (!target) return;
+
+            const link = document.createElement('a');
+            link.href = target.url;
+            link.download = target.filename;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            this.showDownloadMenu = false;
         },
 
         sharePrompt(item) {
