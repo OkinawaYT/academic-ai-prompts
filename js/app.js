@@ -347,7 +347,7 @@ function promptApp() {
             else { navigator.clipboard.writeText(window.location.href); this.showToast = true; }
         },
 
-        downloadPromptData(type) {
+        async downloadPromptData(type) {
             const map = {
                 faculty: {
                     url: 'https://raw.githubusercontent.com/OkinawaYT/academic-ai-prompts/refs/heads/main/data/faculty_prompts.json',
@@ -362,12 +362,23 @@ function promptApp() {
             const target = map[type];
             if (!target) return;
 
-            const link = document.createElement('a');
-            link.href = target.url;
-            link.download = target.filename;
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
+            try {
+                const res = await fetch(target.url, { cache: 'no-store' });
+                if (!res.ok) throw new Error('Download failed');
+                const blob = await res.blob();
+                const objectUrl = URL.createObjectURL(blob);
+
+                const link = document.createElement('a');
+                link.href = objectUrl;
+                link.download = target.filename;
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                URL.revokeObjectURL(objectUrl);
+            } catch (e) {
+                console.warn(e);
+                window.open(target.url, '_blank', 'noopener');
+            }
 
             this.showDownloadMenu = false;
         },
