@@ -8,3 +8,5 @@ README_JP.md
 data_csv/
 archive/
 js/config.js
+.python-version
+uv.lock
